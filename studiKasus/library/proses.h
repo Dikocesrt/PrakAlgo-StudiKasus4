@@ -1,13 +1,23 @@
-#include<iostream>
 using namespace std;
-class Hitung{
-    public:
-        int interatif(){
-            cout << "Masukkan Uang Saku : Rp.";
-            cin >> uangSaku;
-            cout << "Masukkan Total Bulan Menabung : ";
-            cin >> jumlahBulan;
 
+class Proses{
+    public:
+        Proses(){}
+        void getData(){
+            ambil_data.open("apiData.txt");
+            bool saku = true;
+            while(!ambil_data.eof()){
+                if(saku == true){
+                    ambil_data >> uangSaku;
+                    saku = false;
+                }else{
+                    ambil_data >> jumlahBulan;
+                }
+            }
+            ambil_data.close();
+        }
+
+        void interatif(){
             for(i=0;i<jumlahBulan;i++){
                 cout << "Masukkan Pengeluaran Anda Bulan ke " << i + 1 << endl;
                 cout << "Masukkan Biaya Keperluan Kuliah : Rp.";
@@ -21,26 +31,24 @@ class Hitung{
                 cout << "Sisa Uang Saku Bulan ke " << i+1 << " = Rp." << sisa << endl;
                 tabungan += sisa;
             }
-            akhir();
-            return 0;
         }
-        void akhir(){
+
+        void toFile(){
+            tulis_data.open("apiData.txt");
+            tulis_data << jumlahBulan << endl;
             for(i=0;i<jumlahBulan;i++){
-                cout << "Total Pengeluaran Bulan Ke " << i+1 << " = " << pengeluaran[i] << endl;
+                tulis_data << pengeluaran[i] << endl;
             }
-                cout << "Total Keseluruhan Pengeluaran : Rp." << tot << endl;
-                cout << "Total Tabungan : Rp." << tabungan << endl;
+            tulis_data << tot << endl;
+            tulis_data << tabungan;
+            tulis_data.close();
         }
 
     private:
+        ifstream ambil_data;
+        ofstream tulis_data;
         int uangSaku, jumlahBulan, kuliah, jajan, sisa, i;
         int pengeluaran[30];
         int tot = 0;
         int tabungan = 0;
 };
-
-int main(){
-    Hitung proses;
-    proses.interatif();
-    return 0;
-}
